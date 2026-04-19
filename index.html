@@ -35,7 +35,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: auto; }
 
         body {
             font-family: 'Inter', -apple-system, sans-serif;
@@ -648,6 +648,23 @@
     <footer><p>&copy; 2026 БЛАЖИН / BLAZHIN</p></footer>
 
     <script>
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                document.body.style.transition = 'opacity 0.18s ease';
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    target.scrollIntoView({ block: 'start' });
+                    window.scrollBy(0, -60);
+                    document.body.style.opacity = '1';
+                }, 180);
+            });
+        });
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
