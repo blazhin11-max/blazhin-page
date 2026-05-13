@@ -456,90 +456,15 @@
         }
 
         /* BOOKING SECTION */
-        #booking {
-            padding: 120px 0;
-            background: linear-gradient(180deg, var(--black) 0%, rgba(200,168,124,0.04) 50%, var(--black) 100%);
-        }
-        .booking-bio {
-            max-width: 680px;
-            margin: 0 auto 56px;
-            text-align: center;
-            color: var(--white-dim);
-            font-size: 17px;
-            line-height: 1.7;
-        }
+        #booking { padding: 120px 0; background: linear-gradient(180deg, var(--black) 0%, rgba(200,168,124,0.04) 50%, var(--black) 100%); }
+        .booking-bio { max-width: 680px; margin: 0 auto 56px; text-align: center; color: var(--white-dim); font-size: 17px; line-height: 1.7; }
         .booking-bio em { color: var(--accent); font-style: normal; }
-        .fee-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            max-width: 620px;
-            margin: 32px auto 0;
-        }
-        @media (max-width: 600px) { .fee-grid { grid-template-columns: 1fr; } }
-        .fee-item {
-            background: var(--card);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 20px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: border-color 0.2s;
-        }
-        .fee-item:hover { border-color: rgba(200,168,124,0.3); }
-        .fee-type { color: var(--white-dim); font-size: 15px; }
-        .fee-price { color: var(--accent); font-size: 16px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
-        .fee-note {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--gray);
-            font-size: 13px;
-            letter-spacing: 0.02em;
-        }
-        .booking-fees-title {
-            text-align: center;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--white-dim);
-            margin-bottom: 8px;
-            margin-top: 56px;
-        }
-        .booking-format {
-            max-width: 620px;
-            margin: 48px auto 0;
-            background: var(--card);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 24px 32px;
-            color: var(--white-dim);
-            font-size: 15px;
-            line-height: 1.7;
-        }
+        .booking-format { max-width: 620px; margin: 48px auto 0; background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px 32px; color: var(--white-dim); font-size: 15px; line-height: 1.7; }
         .booking-format strong { color: var(--accent); font-weight: 500; }
-        .booking-cta {
-            text-align: center;
-            margin-top: 56px;
-        }
-        .booking-btn {
-            display: inline-block;
-            padding: 16px 40px;
-            border: 1px solid var(--accent);
-            border-radius: 50px;
-            color: var(--accent);
-            text-decoration: none;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            letter-spacing: 0.04em;
-            transition: all 0.2s;
-        }
-        .booking-btn:hover {
-            background: var(--accent);
-            color: var(--black);
-        }
+        .booking-fees-note { text-align: center; margin-top: 40px; color: var(--gray); font-size: 14px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        .booking-cta { text-align: center; margin-top: 48px; }
+        .booking-btn { display: inline-block; padding: 16px 40px; border: 1px solid var(--accent); border-radius: 50px; color: var(--accent); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-size: 16px; letter-spacing: 0.04em; transition: all 0.2s; }
+        .booking-btn:hover { background: var(--accent); color: var(--black); }
 
     </style>
 </head>
@@ -721,7 +646,7 @@
             </div>
 
             <div class="reveal">
-                <p class="fee-note" style="margin-top:48px;">Гонорар и полный райдер — по запросу. Предоплата 50% · Трансфер и проживание оплачивает организатор.</p>
+                <p class="booking-fees-note">Гонорар и полный технический/бытовой райдер предоставляются по запросу.<br>Предоплата 50% · Трансфер и проживание оплачивает организатор.</p>
             </div>
 
             <div class="booking-cta reveal">
@@ -778,4 +703,48 @@
                 if (!target) return;
                 e.preventDefault();
                 document.body.style.transition = 'opacity 0.18s ease';
-             
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    target.scrollIntoView({ block: 'start' });
+                    window.scrollBy(0, -60);
+                    document.body.style.opacity = '1';
+                }, 180);
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+        document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+        window.addEventListener('scroll', () => {
+            document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+        function toggleMenu() {
+            const isOpen = document.getElementById('navLinks').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('open');
+            if (isOpen) {
+                const scrollY = window.scrollY;
+                document.body.dataset.scrollY = scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+                document.body.style.top = `-${scrollY}px`;
+            } else {
+                const scrollY = parseInt(document.body.dataset.scrollY || '0');
+                document.body.style.position = '';
+                document.body.style.width = '';
+                document.body.style.top = '';
+                window.scrollTo(0, scrollY);
+            }
+        }
+        function closeMenu() {
+            document.getElementById('navLinks').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            const scrollY = parseInt(document.body.dataset.scrollY || '0');
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            window.scrollTo(0, scrollY);
+        }
+    </script>
+</body>
+</html>
